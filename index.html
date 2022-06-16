@@ -1,33 +1,42 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="styles.css">
-		<script src="visualizer.js"></script>
+		<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+		<script defer src="visualizer.js"></script>
 	</head>
 	<body>
-
-		<h1>Sorting Algorithms</h1>
-		<nav>
-
-		</nav>
 		<div class='content'>
-			<div class='graph-container' id='graph-container'></div>
-			<div class='controls'>
-				<div class='sort-section'>
-					<button id='bubble' onclick='sort()'>bubble sort</button>
-					<button id='selection' onclick='sort()' class='button-selected'>selection sort</button>
-					<button id='merge' onclick='sort()'>merge sort</button>
-					<button id='insertion' onclick='sort()'>insertion sort</button>
-					<button id='quicksort' onclick='sort()'>quicksort</button>
-				</div>
-				<div class='generate-section'>
-					<button onclick='renderGraph(createRandomArray(70))'>generate-1</button>
-					<button onclick='renderGraphGradually(createRandomArray(70))'>generate-2</button>
+			<div class='title-container'>
+				<h1 class='selected'>Sorting</h1>
+				<h1>Pathfinding</h1>
+			</div>
+			<div class='content-ui'>
+				<div class='graph-container' id='graph-container'></div>
+				<div class='controls'>
+					<div class='section--sort'>
+						<button id='button--bubble' class='button--sort'>bubble sort</button>
+						<button id='button--selection' class='button--sort'>selection sort</button>
+						<button id='button--merge' class='button--sort'>merge sort</button>
+						<button id='button--insertion' class='button--sort'>insertion sort</button>
+						<button id='button--quicksort' class='button--sort'>quicksort</button>
+					</div>
+					<div class='section--generate'>
+						<button id="button--refresh" class='button--refresh'><i class="fa fa-refresh"></i></button>
+						<div class="slide-container">
+							<div class='icon-min'></div>
+							<input type="range" min="20" max="200" value="70" class="slider" id="range">
+							<div class='icon-max'></div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 		<script>
-			renderGraph(createRandomArray(70));
+
 		</script>
 
 	</body>
