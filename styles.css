@@ -86,6 +86,10 @@ h1.algo-tab-closed:hover {
 	padding: 10px
 }
 
+.section--discription {
+	max-width: 720px;
+}
+
 button {
 	background-color: darkgray;
 	margin: 0px;
