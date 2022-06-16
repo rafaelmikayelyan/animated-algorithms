@@ -5,9 +5,14 @@ let buttonsSort = document.getElementsByClassName("button--sort");
 let isSorted = false;
 let colorDefault = 'lightgray';
 let colorUsed = 'darkgray';
-let colorCurrent = '#DB7093';
-let colorLast = '#6495ED';
-let animationSpeed = 300;
+let colorChosen = '#8B008B';
+let colorIndex = '#6495ED';
+let colorCompared = '#DB7093';
+let colorDone = '#9ACD32';
+let animationSpeed = 1000 / 70;
+
+let arrayTest = [348, 321, 56, 340, 47, 17, 249, 295, 280, 103, 302, 196, 38, 67, 237, 140, 307, 186, 15, 121];
+
 
 document.addEventListener('DOMContentLoaded', (event) => {
 	init();
@@ -16,13 +21,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
 function init () {
 	renderGraphChange();
 
-	slider.addEventListener('input', function () { renderGraphChange(); }, false);
+	slider.addEventListener('input', function () { renderGraphChange(); adjustAnimationSpeed(); }, false);
 	buttonRefresh.addEventListener('click', function() { refreshGraph(); }, false);
 
 	for (let i = 0; i < buttonsSort.length; i++) {
 		buttonsSort[i].addEventListener('click', function() { sort(buttonsSort[i]); }, false);
+		buttonsSort[i].onmouseover = function() {mouseOver(i)};
 	}
 	renderSliderMinMax();
+}
+
+function mouseOver(i) {
+	console.log(buttonsSort[i].id);
+	document.getElementById('discription').innerHTML = getSortingInfo(buttonsSort[i].id);
 }
 
 function createRandomArray() {
@@ -31,6 +42,17 @@ function createRandomArray() {
 		randomArray[i] = Math.floor(Math.random() * 400);
 	}
 	return randomArray;
+}
+
+function getArray() {
+	let bars = document.getElementsByClassName('bar');
+	let size = bars.length;
+	let array = new Array(size);
+	for (let i = 0; i < size; i++) {
+		array[i] = parseInt(bars[i].style.height);
+	}
+
+	return array;
 }
 
 function renderGraphChange() {
@@ -68,7 +90,7 @@ async function refreshGraph() {
 
 	let bars = document.getElementsByClassName('bar');
 
-	await sleep(animationSpeed);
+	await sleep();
 
 	for (let i = 0; i < array.length; i++) {
 		bars[i].style.height = array[i] + 'px';
@@ -77,7 +99,7 @@ async function refreshGraph() {
 	}
 }
 
-function sleep(ms) {
+function sleep(ms = animationSpeed) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
@@ -95,58 +117,226 @@ function sort(element) {
 
 	element.classList.add('button-selected');
 
+
+	let array = getArray();
+
 	switch (element.id) {
+		case 'button--bubble':
+			bubbleSort(array);
+			break;
 		case 'button--selection':
-			selectionSort();
+			selectionSort(array);
+			break;
+		case 'button--insertion':
+			insertionSort(array)
+			break;
+		case 'button--quicksort':
+			// console.log(array);
+			quickSort(array, 0, array.length - 1);
+			// console.log('=================');
+			// console.log(array);
+			// console.log('=================');
+			// renderGraphChange();
+			// quickSort(array, 0, array.length - 1);
 			break;
 		default:
 			console.log(element.id);
 			break;
 	}
-
 }
 
-async function selectionSort() {
-	let bars = document.getElementsByClassName('bar');
-	let size = bars.length;
+async function bubbleSort(array) {
+	for (let i = 0; i < array.length - 1; i++) {
+		for (let j = 0; j < array.length - i - 1; j++) {
+			renderBarChange(j, 1);
+			await sleep();
 
-	for (let step = 0; step < size - 1; step++) {
-		let min_idx = step;
+			if (array[j] > array[j + 1]) {
 
-		for (let i = step + 1; i < size; i++) {
+				let temp = array[j];
+				array[j] = array[j + 1];
 
-			if (parseInt(bars[i].style.height) < parseInt(bars[min_idx].style.height)) {
-				min_idx = i;
+				renderBarChange(j, 1, array[j + 1])
+
+				array[j + 1] = temp;
+
+				renderBarChange(j + 1, 2, temp)
+				await sleep();
 			}
+
+			if (!isSorted) {
+				return;
+			}
+			renderBarChange(j, 3);
+			renderBarChange(j + 1, -1)
+		}
+	}
+	renderGraphAsSorted();
+}
+
+async function selectionSort(array) {
+	for (let i = 0; i < array.length - 1; i++) {
+		let min_idx = i;
+		renderBarChange(i, 0);
+
+		for (let j = i + 1; j < array.length; j++) {
+			renderBarChange(j, 1);
+			await sleep(1000/array.length);
+			if (array[j] < array[min_idx]) {
+				min_idx = j;
+			}
+			renderBarChange(j, 3);
+			await sleep(5);
 		}
 
-		let temp = parseInt(bars[step].style.height);
-		bars[step].style.height = parseInt(bars[min_idx].style.height) + 'px';
-		bars[min_idx].style.height = temp + 'px';
+		let temp = array[i];
 
-		bars[step].style.backgroundColor = colorLast;
-		bars[min_idx].style.backgroundColor = colorCurrent;
-		await sleep(animationSpeed);
-		bars[step].style.backgroundColor = colorUsed;
-		bars[min_idx].style.backgroundColor = colorUsed;
+		array[i] = array[min_idx];
+		renderBarChange(i, 0, array[min_idx]);
+
+		array[min_idx] = temp;
+		renderBarChange(min_idx, 2, temp);
+		await sleep();
+		
+		renderBarChange(i);
+		renderBarChange(min_idx);
+		renderBarChange(i+1);
+
 		if (!isSorted) {
 			return;
 		}
 	}
+	renderGraphAsSorted();
 }
 
-function insertionSort(bars) {
-	var len = array_length(A);
-	var i = 1;
-	while (i < len) {
-		var x = A[i];
-		var j = i - 1;
-		while (j >= 0 && A[j] > x) {
-			A[j + 1] = A[j];
-			j = j - 1;
+async function insertionSort(array) {
+	for (let i = 1; i < array.length; i++) {
+		let iValue = array[i];
+		let j = i - 1;
+		await renderBarChange(i, 0);
+		await sleep(20);
+
+		while (j >= 0 && iValue < array[j]) {
+			await renderBarChange(j, 2);
+			await sleep(20);
+			array[j + 1] = array[j];
+			await renderBarChange(j, 1);
+			await sleep(20);
+			if (j + 1 == i) {
+				await renderBarChange(j + 1, 0, array[j]);
+				await sleep(20);
+			} else {
+				await renderBarChange(j + 1, 1, array[j]);
+				await sleep(20);
+			}
+			j--;
+			if (!isSorted) {
+				return;
+			}
 		}
-		A[j+1] = x;
-		i = i + 1;
+		array[j + 1] = iValue;
+		await renderBarChange(j + 1);
+		await renderBarChange(j + 1, 1, iValue);
+	}
+	renderGraphAsSorted();
+}
+
+
+async function swap(arr, i, j) {
+    let temp = arr[i];
+    arr[i] = arr[j];
+	renderBarChange(i, 1, arr[j]);
+
+    arr[j] = temp;
+	renderBarChange(j, 1, temp);
+	renderBarChange(i);
+}
+ 
+/* This function takes last element as pivot, places
+   the pivot element at its correct position in sorted
+   array, and places all smaller (smaller than pivot)
+   to left of pivot and all greater elements to right
+   of pivot */
+function partition(arr, low, high) {
+ 
+    // pivot
+    let pivot = arr[high];
+ 
+    // Index of smaller element and
+    // indicates the right position
+    // of pivot found so far
+    let i = (low - 1);
+ 
+    for (let j = low; j <= high - 1; j++) {
+ 
+        // If current element is smaller
+        // than the pivot
+        if (arr[j] < pivot) {
+ 
+            // Increment index of
+            // smaller element
+            i++;
+            swap(arr, i, j);
+        }
+    }
+    swap(arr, i + 1, high);
+    return (i + 1);
+}
+ 
+/* The main function that implements QuickSort
+          arr[] --> Array to be sorted,
+          low --> Starting index,
+          high --> Ending index
+ */
+function quickSort(arr, low, high) {
+    if (low < high) {
+ 
+        // pi is partitioning index, arr[p]
+        // is now at right place
+        let pi = partition(arr, low, high);
+ 
+        // Separately sort elements before
+        // partition and after partition
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+	renderGraphAsSorted();
+}
+
+async function renderBarChange(index, color = null, value = null) {
+	let bars = document.getElementsByClassName('bar');
+	
+	// index
+	if (color == 0) {
+		color = colorIndex;
+	// search
+	} else if (color == 1) {
+		color = colorCompared;
+	// compare
+	} else if (color == 2) {
+		color = colorChosen;
+	// pass
+	} else if (color == 3) {
+		color = colorDefault;
+	// changed 
+	} else if (color == 9) {
+		color = colorDone;
+	// changed 
+	} else {
+		color = colorUsed;
+	}
+
+	bars[index].style.backgroundColor = color;
+	if (value) {
+		bars[index].style.height = value + 'px';
+	}
+}
+
+async function renderGraphAsSorted() {
+	let array = getArray();
+	for (let i = 0; i < array.length; i++) {
+		await renderBarChange(i, 9);
+		await sleep(20);
 	}
 }
 
@@ -165,4 +355,36 @@ function populateSliderMinMax(element, number) {
 		bar.style.backgroundColor = 'white';
 		element.appendChild(bar);
 	}
+}
+
+function adjustAnimationSpeed () {
+	animationSpeed = 10000 / slider.value;
+	let bars = document.getElementsByClassName('bar');
+	let size = bars.length;
+
+	for (let i = 0; i < size - 1; i++) {
+		bars[i].style.transition = 'height ' + animationSpeed * 0.0008 + 's ease-out';
+	}
+}
+
+
+// data
+
+
+function getSortingInfo(id) {
+	let string = '';
+	if (id == 'button--bubble') {
+		string = 'Average and worst case time complexity: n^2. Best case time complexity: n when array is already sorted. Worst case: when the array is reverse sorted.';
+	} else if (id == 'button--selection') {
+		string = 'Best, average and worst case time complexity: n^2 which is independent of distribution of data. ';
+	} else if (id == 'button--merge') {
+		string = 'Best, average and worst case time complexity: nlogn which is independent of distribution of data.';
+	} else if (id == 'button--insertion') {
+		string = 'Average and worst case time complexity: n^2. Best case time complexity: n when array is already sorted. Worst case: when the array is reverse sorted.';
+	} else if (id == 'button--quicksort') {
+		string = 'Worst case: when the array is sorted or reverse sorted, the partition algorithm divides the array in two subarrays with 0 and n-1 elements.';
+		string += ' \nBest case and Average case: On an average, the partition algorithm divides the array in two subarrays with equal size.';
+	}
+
+	return string;
 }
