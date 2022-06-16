@@ -33,8 +33,12 @@ h1 {
 	border-radius: 20px 20px 0 0;
 }
 
-h1.selected {
+h1.algo-tab-open {
 	background-color: #F5F5F5;
+}
+
+h1.algo-tab-closed:hover {
+	background-color: #C0C0C0;
 }
 
 .content-ui {
@@ -92,7 +96,7 @@ button {
 }
 
 button:hover {
-	background-color: lightgray;
+	opacity: 0.7;
 }
 
 button:active {
