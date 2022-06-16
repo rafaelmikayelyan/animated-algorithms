@@ -7,3 +7,4 @@
 - complete linear sorting
 - add non-linear sorting
 - add pathfinding section
+- add @media
