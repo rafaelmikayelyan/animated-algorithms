@@ -22,6 +22,7 @@ function init () {
 	for (let i = 0; i < buttonsSort.length; i++) {
 		buttonsSort[i].addEventListener('click', function() { sort(buttonsSort[i]); }, false);
 	}
+	renderSliderMinMax();
 }
 
 function createRandomArray() {
@@ -149,3 +150,19 @@ function insertionSort(bars) {
 	}
 }
 
+function renderSliderMinMax() {
+	populateSliderMinMax(document.getElementById('slider-min'), 3);
+	populateSliderMinMax(document.getElementById('slider-max'), 5);
+}
+
+function populateSliderMinMax(element, number) {
+	for (let i = number; i > 0; i--) {
+		let bar = document.createElement('div');
+		let w = 15 / number;
+		let h = 20 - i * (15 / number);
+		bar.style.height = h + 'px';
+		bar.style.width = w + 'px';
+		bar.style.backgroundColor = 'white';
+		element.appendChild(bar);
+	}
+}
