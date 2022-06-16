@@ -1,32 +1,51 @@
-let graphContainer;
+let graphContainer = document.getElementById("graph-container");
+let slider = document.getElementById("range");
+let buttonRefresh = document.getElementById("button--refresh");
+let buttonsSort = document.getElementsByClassName("button--sort");
 let isSorted = false;
 let colorDefault = 'lightgray';
 let colorUsed = 'darkgray';
-let colorCurrent = '#FF4500';
+let colorCurrent = '#DB7093';
 let colorLast = '#6495ED';
 let animationSpeed = 300;
 
-function createRandomArray(length) {
-	randomArray = new Array(length);
-	for (let i = 0; i < length; i++) {
+document.addEventListener('DOMContentLoaded', (event) => {
+	init();
+})
+
+function init () {
+	renderGraphChange();
+
+	slider.addEventListener('input', function () { renderGraphChange(); }, false);
+	buttonRefresh.addEventListener('click', function() { refreshGraph(); }, false);
+
+	for (let i = 0; i < buttonsSort.length; i++) {
+		buttonsSort[i].addEventListener('click', function() { sort(buttonsSort[i]); }, false);
+	}
+}
+
+function createRandomArray() {
+	let randomArray = new Array(slider.value);
+	for (let i = 0; i < slider.value; i++) {
 		randomArray[i] = Math.floor(Math.random() * 400);
 	}
 	return randomArray;
 }
 
-async function renderGraph(array) {
+function renderGraphChange() {
 	isSorted = false;
+	let array = createRandomArray();
+	clearButtonSelection();
+
 	if (graphContainer) {
 		let bars = document.getElementsByClassName('bar');
 		for (let i = 0; i < bars.length; i++) {
 			bars[i].style.height = 0 + 'px';
 		}
-		await sleep(animationSpeed);
 	}
 
-	graphContainer = document.getElementById("graph-container");
 	graphContainer.innerHTML = '';
-	
+
 	for (let i = 0; i < array.length; i++) {
 		let bar = document.createElement('div');
 		bar.classList.add('bar');
@@ -35,38 +54,62 @@ async function renderGraph(array) {
 	}
 
 	let bars = document.getElementsByClassName('bar');
-
-	await sleep(50);
 	for (let i = 0; i < bars.length; i++) {
 		bars[i].style.height = array[i] + 'px';
 	}
 
 }
 
-async function renderGraphGradually(array) {
-	clearButtonSelection();
+async function refreshGraph() {
 	isSorted = false;
+	let array = createRandomArray();
+	clearButtonSelection();
 
 	let bars = document.getElementsByClassName('bar');
-	
+
 	await sleep(animationSpeed);
+
 	for (let i = 0; i < array.length; i++) {
 		bars[i].style.height = array[i] + 'px';
-		await sleep(10);
 		bars[i].style.backgroundColor = colorDefault;
+		await sleep(5);
 	}
 }
 
-async function sort() {
+function sleep(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function clearButtonSelection() {
+	try {
+		document.getElementsByClassName('button-selected')[0].classList.remove('button-selected');	
+	} catch {}
+}
+
+function sort(element) {
 	if (isSorted) {
-		return true;
+		return;
 	}
 	isSorted = true;
 
+	element.classList.add('button-selected');
+
+	switch (element.id) {
+		case 'button--selection':
+			selectionSort();
+			break;
+		default:
+			console.log(element.id);
+			break;
+	}
+
+}
+
+async function selectionSort() {
 	let bars = document.getElementsByClassName('bar');
 	let size = bars.length;
 
-    for (let step = 0; step < size - 1; step++) {
+	for (let step = 0; step < size - 1; step++) {
 		let min_idx = step;
 
 		for (let i = step + 1; i < size; i++) {
@@ -88,21 +131,21 @@ async function sort() {
 		if (!isSorted) {
 			return;
 		}
-    }
+	}
 }
 
-
-
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function clearButtonSelection() {
-	let buttons = document.getElementsByClassName(buttons);
-	for (let i = 0; i < buttons.length; i++) {
-		// if (buttons[i].className == 'button-selected') {
-			// buttons[i].style.backgroundColor = 'lightgray';
-			buttons[i].classList.remove('button-selected');	
+function insertionSort(bars) {
+	var len = array_length(A);
+	var i = 1;
+	while (i < len) {
+		var x = A[i];
+		var j = i - 1;
+		while (j >= 0 && A[j] > x) {
+			A[j + 1] = A[j];
+			j = j - 1;
 		}
-	} 
+		A[j+1] = x;
+		i = i + 1;
+	}
 }
+
