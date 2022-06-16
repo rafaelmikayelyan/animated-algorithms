@@ -1,5 +1,7 @@
 # Animated Algorithms
 
+![sort img](sorting.png)
+
 ## ToDo
 - add React
 - complete linear sorting
