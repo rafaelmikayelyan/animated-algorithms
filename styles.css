@@ -73,10 +73,11 @@ h1.selected {
 }
 
 .section--generate {
-	margin: 10px 0px 10px;
+	/* margin: 10px 0px 10px; */
+	width: 100%;
 	display: flex;
-	align-items: baseline;
-	justify-content: space-between;
+	align-items: center;
+	/* justify-content: space-between; */
 	background-color: lightgray;
 	padding: 10px
 }
@@ -111,13 +112,18 @@ button:active {
 	border-radius: 3px;
 }
 
-.slide-container {
-  width: 80%;
+.slider-container {
+  width: 100%;
+  padding: 0 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .slider {
   -webkit-appearance: none;
-  width: 100%;
+  width: 90%;
   height: 10px;
   border-radius: 5px;
   background: white;
@@ -149,3 +155,11 @@ button:active {
   cursor: pointer;
 }
 
+.slider-icons {
+	margin: 0;
+	width: 24px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-end;
+}
