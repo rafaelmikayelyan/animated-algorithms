@@ -1,6 +1,7 @@
 # Animated Algorithms
 
 ![sort img](sorting.png)
+![sort gif](aa-sort-complete.gif)
 
 ## ToDo
 - add React
