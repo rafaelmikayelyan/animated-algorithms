@@ -1,7 +1,7 @@
 # Animated Algorithms
 
 **
-### The app design has been changed. In the process of implemnting React and Canvas.
+### The app design has been changed. In the process of implementing React and Canvas.
 
 **
 
