@@ -5,8 +5,8 @@
 
 **
 
-![sort img](sorting.png)
-![sort gif](aa-sort-complete.gif)
+![sort img](support/sorting.png)
+![sort gif](support/aa-sort-complete.gif)
 
 ## ToDo
 - add React
