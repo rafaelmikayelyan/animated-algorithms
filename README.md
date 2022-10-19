@@ -1,7 +1,7 @@
 # Animated Algorithms
 
 **
-### The app design has been changed. In the process of implementing React and Canvas.
+### This repo has not been updated yet. [Go to current version](https://rafaelmikayelyan.github.io)
 
 **
 
